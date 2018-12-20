@@ -1,5 +1,5 @@
 # -*-coding:utf-8-*-
-
+import logging
 from time import sleep
 
 import numpy as np
@@ -278,10 +278,23 @@ class MAX30102:
 def read_heart_rate(gpio_pin=7, n=100):
     max30102 = MAX30102(gpio_pin=gpio_pin)
     while True:
+        logging.info('read from max30102 once')
         red_buf, ir_buf = max30102.read_sequential(amount=n)
         hr_valid, hr = max30102.calc_heart_rate(ir_buf)
+        logging.info(hr_valid)
+        logging.info(hr)
         if hr_valid:
+            logging.info(ir_buf)
             max30102.shutdown()
             return hr
         max30102.reset()
         max30102.setup(led_mode=0x03)
+        
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(levelname)s: %(filename)s[line:%(lineno)d] - %(funcName)s : %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    hr = read_heart_rate(0, 200)
+    logging.info('test once')
+    hr = read_heart_rate(0, 200)
+    logging.info('test once')
