@@ -263,7 +263,7 @@ class MAX30102:
             j = i + 1
             while j < old_n_peaks:
                 n_dist = (sorted_indices[j] - sorted_indices[i]) if i != -1 else (
-                    sorted_indices[j] + 1)  # lag-zero peak of autocorr is at index -1
+                        sorted_indices[j] + 1)  # lag-zero peak of autocorr is at index -1
                 if n_dist > min_dist or n_dist < -1 * min_dist:
                     sorted_indices[n_peaks] = sorted_indices[j]
                     n_peaks += 1  # original uses post increment
@@ -273,6 +273,39 @@ class MAX30102:
         sorted_indices[:n_peaks] = sorted(sorted_indices[:n_peaks])
 
         return sorted_indices, n_peaks
+
+
+def calc_heart_rate(ir_data):
+    """
+    By detecting  peaks of PPG cycle to calc hr
+    """
+    # 25 samples per second (in algorithm.h)
+    sample_freq = 25
+    hr_valid = False
+    hr = -999
+    buffer_size = len(ir_data)
+    ir_mean = sum(ir_data) / float(buffer_size)
+    ir_data = [x - ir_mean for x in ir_data]
+    ir_data = [1 if x > 0 else 0 for x in ir_data]
+    positive_nums = sum([1 for x in ir_data if x > 0])
+    if positive_nums > buffer_size * 2 / 3 or positive_nums < buffer_size / 3:
+        return hr_valid, hr
+    index_buffer = []
+    for index in range(0, buffer_size - 1):
+        if ir_data[index] == 1 and ir_data[index + 1] == 0:
+            index_buffer.append(index)
+    peak_nums = len(index_buffer) - 1
+    if peak_nums <= 1:
+        return hr_valid, hr
+    else:
+        peak_interval_sum = 0
+        for index in range(0, peak_nums):
+            peak_interval = index_buffer[index + 1] - index_buffer[index]
+            peak_interval_sum = peak_interval_sum + peak_interval
+        peak_interval_mean = peak_interval_sum / peak_nums
+        hr = int(sample_freq * 60 / peak_interval_mean)
+        hr_valid = True
+        return hr_valid, hr
 
 
 def read_heart_rate(gpio_pin=7, n=100):
@@ -289,8 +322,9 @@ def read_heart_rate(gpio_pin=7, n=100):
             return hr
         max30102.reset()
         max30102.setup(led_mode=0x03)
-        
-if __name__ == '__main__':
+
+
+def main():
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s: %(filename)s[line:%(lineno)d] - %(funcName)s : %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
@@ -298,3 +332,7 @@ if __name__ == '__main__':
     logging.info('test once')
     hr = read_heart_rate(0, 200)
     logging.info('test once')
+
+
+if __name__ == '__main__':
+    main()
