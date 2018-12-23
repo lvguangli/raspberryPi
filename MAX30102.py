@@ -318,6 +318,9 @@ def read_heart_rate(gpio_pin=7, n=100):
         logging.info(hr)
         if hr_valid:
             logging.info(ir_buf)
+            with open('hrdump.log', 'a') as output:
+                line = str(hr) + ' [' + ','.join([str(x) for x in ir_buf]) + ']\n'
+                output.write(line)
             max30102.shutdown()
             return hr
         max30102.reset()
@@ -328,9 +331,9 @@ def main():
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s: %(filename)s[line:%(lineno)d] - %(funcName)s : %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    hr = read_heart_rate(0, 200)
+    hr = read_heart_rate(0, 100)
     logging.info('test once')
-    hr = read_heart_rate(0, 200)
+    hr = read_heart_rate(0, 100)
     logging.info('test once')
 
 
