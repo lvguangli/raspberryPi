@@ -156,17 +156,12 @@ class MAX30102:
         return red_buf, ir_buf
 
     # this assumes ir_data as np.array
-    def calc_heart_rate(self, ir_data):
+    def calc_heart_rate(self, ir_data, sample_rate=25, ma_size=4):
         """
         By detecting  peaks of PPG cycle to calc hr
         """
-        # 25 samples per second (in algorithm.h)
-        SAMPLE_FREQ = 25
-        # taking moving average of 4 samples when calculating HR
-        # in algorithm.h, "DONOT CHANGE" comment is attached
-        MA_SIZE = 4
         # sampling frequency * 4 (in algorithm.h)
-        BUFFER_SIZE = 100
+        buffer_size = len(ir_data)
 
         # get dc mean
         ir_mean = int(np.mean(ir_data))
@@ -177,22 +172,22 @@ class MAX30102:
 
         # 4 point moving average
         # x is np.array with int values, so automatically casted to int
-        for i in range(x.shape[0] - MA_SIZE):
-            x[i] = np.sum(x[i:i + MA_SIZE]) / MA_SIZE
+        for i in range(x.shape[0] - ma_size):
+            x[i] = np.sum(x[i:i + ma_size]) / ma_size
 
         # calculate threshold
         n_th = int(np.mean(x))
         n_th = 30 if n_th < 30 else n_th  # min allowed
         n_th = 60 if n_th > 60 else n_th  # max allowed
 
-        ir_valley_locs, n_peaks = self.find_peaks(x, BUFFER_SIZE, n_th, 4, 15)
+        ir_valley_locs, n_peaks = self.find_peaks(x, buffer_size, n_th, 4, 15)
         # print(ir_valley_locs[:n_peaks], ",", end="")
         peak_interval_sum = 0
         if n_peaks >= 2:
             for i in range(1, n_peaks):
                 peak_interval_sum += (ir_valley_locs[i] - ir_valley_locs[i - 1])
             peak_interval_sum = int(peak_interval_sum / (n_peaks - 1))
-            hr = int(SAMPLE_FREQ * 60 / peak_interval_sum)
+            hr = int(sample_rate * 60 / peak_interval_sum)
             hr_valid = True
         else:
             hr = -999  # unable to calculate because # of peaks are too small
@@ -263,7 +258,7 @@ class MAX30102:
             j = i + 1
             while j < old_n_peaks:
                 n_dist = (sorted_indices[j] - sorted_indices[i]) if i != -1 else (
-                        sorted_indices[j] + 1)  # lag-zero peak of autocorr is at index -1
+                    sorted_indices[j] + 1)  # lag-zero peak of autocorr is at index -1
                 if n_dist > min_dist or n_dist < -1 * min_dist:
                     sorted_indices[n_peaks] = sorted_indices[j]
                     n_peaks += 1  # original uses post increment
