@@ -165,8 +165,8 @@ def show(x_src, y_src):
     plt.subplot(414)
     plt.axis('off')
     plt.text(0, 0, "temperature:" + str(y1[-1]))
-    plt.text(0.4, 0, "humidity:" + str(y2[-1]))
-    plt.text(0.8, 0, "heart_rate:" + str(y3[-1]))
+    plt.text(0.35, 0, "humidity:" + str(y2[-1]))
+    plt.text(0.7, 0, "heart_rate:" + str(y3[-1]))
     plt.pause(0.5)
     plt.pause(0.5)
 
