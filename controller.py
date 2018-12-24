@@ -8,6 +8,7 @@ import DHT11
 import MAX30102
 import smart_config
 import write_to_relay
+import matplotlib.pyplot as plt
 
 
 class Record:
@@ -101,6 +102,8 @@ def search_status(humidity, temperature, heart_rate):
 
 
 def init(opt):
+    plt.ion()
+    plt.figure(1)
     last_cmd = smart_config.Status.CLOSE
     relay_gpio_pin = int(opt.relay)
     write_to_relay.set_value(relay_gpio_pin, last_cmd)
@@ -133,6 +136,47 @@ def set_status(record: Record, status, relay_gpio_pin, cmd):
     return record
 
 
+def show(x_src, y_src):
+    plt.clf()
+    (y1_src, y2_src, y3_src) = y_src
+    if len(x_src) > 10:
+        x = x_src[len(x_src) - 10:]
+        y1 = y1_src[len(y1_src) - 10:]
+        y2 = y2_src[len(y2_src) - 10:]
+        y3 = y3_src[len(y3_src) - 10:]
+    else:
+        x = x_src[0:]
+        y1 = y1_src[0:]
+        y2 = y2_src[0:]
+        y3 = y3_src[0:]
+    if len(x) >= 10:
+        xtick = x
+    else:
+        xtick = x[0:]
+        while len(xtick) <= 10:
+            xtick.append(xtick[-1] + 1)
+    axes = plt.subplot(311)
+    axes.plot(x, y1, color='r')
+    # plt.xlim、plt.ylim 设置横纵坐标轴范围
+    # plt.xlabel、plt.ylabel 设置坐标轴名称
+    # plt.xticks、plt.yticks 设置坐标轴刻度
+    #  axes.set_*
+    axes.set_xticks(range(xtick[0], xtick[-1] + 1, 1))
+    axes.set_yticks(range(20, 40, 2))
+    axes.set_ylabel('temperature')
+    axes = plt.subplot(312)
+    axes.plot(x, y2, color='y')
+    axes.set_xticks(range(x[0], x[-1] + 1, 1))
+    axes.set_yticks(range(10, 100, 10))
+    axes.set_ylabel('humidity')
+    axes = plt.subplot(313)
+    axes.plot(x, y3, color='g')
+    axes.set_xticks(range(x[0], x[-1] + 1, 1))
+    axes.set_yticks(range(50, 200, 15))
+    axes.set_ylabel('heart_rate')
+    plt.pause(0.5)
+
+
 def run(opt):
     dht11_gpio_pins = opt.dht11
     dht11_gpio_pins = dht11_gpio_pins.split(',')
@@ -140,11 +184,28 @@ def run(opt):
     max30102_gpio_pin = int(opt.max30102)
     relay_gpio_pin = int(opt.relay)
     record = init(opt)
+    time_index = 0
+    x = list()
+    y1 = list()
+    y2 = list()
+    y3 = list()
     while True:
         global_dht11_index = random.randint(0, 1)
         humidity, temperature = DHT11.read_temperature_and_humidity(dht11_gpio_pins, global_dht11_index)
         heart_rate = MAX30102.read_heart_rate(max30102_gpio_pin, 100)
         status = search_status(humidity, temperature, heart_rate)
+        x.append(time_index)
+        y1.append(temperature)
+        y2.append(humidity)
+        y3.append(heart_rate)
+        if len(x) > 200:
+            x = x[len(x) - 100:]
+            y1 = y1[len(y1) - 100:]
+            y2 = y2[len(y2) - 100:]
+            y3 = y3[len(y3) - 100:]
+        y = (y1, y2, y3)
+        show(x, y)
+        time_index += 1
         if status == smart_config.Status.UNKNOWN:
             continue
         if record.last_cmd == smart_config.Status.CLOSE and status != smart_config.Status.COLD:
