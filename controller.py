@@ -143,25 +143,31 @@ def show(x_src, y_src):
     y1 = y1_src[len(y1_src) - 10:]
     y2 = y2_src[len(y2_src) - 10:]
     y3 = y3_src[len(y3_src) - 10:]
-    axes = plt.subplot(311)
-    axes.plot(x, y1, color='r')
     # plt.xlim、plt.ylim 设置横纵坐标轴范围
     # plt.xlabel、plt.ylabel 设置坐标轴名称
     # plt.xticks、plt.yticks 设置坐标轴刻度
     #  axes.set_* 同上
-    axes.set_xticks(range(x[0], x[-1] + 1, 1))
-    axes.set_yticks(range(0, 45, 5))
-    axes.set_ylabel('temperature')
-    axes = plt.subplot(312)
-    axes.plot(x, y2, color='y')
-    axes.set_xticks(range(x[0], x[-1] + 1, 1))
-    axes.set_yticks(range(0, 120, 10))
-    axes.set_ylabel('humidity')
-    axes = plt.subplot(313)
-    axes.plot(x, y3, color='g')
-    axes.set_xticks(range(x[0], x[-1] + 1, 1))
-    axes.set_yticks(range(0, 220, 20))
-    axes.set_ylabel('heart_rate')
+    plt.subplot(411)
+    plt.plot(x, y1, color='r')
+    plt.xticks(range(x[0], x[-1] + 1, 1))
+    plt.yticks(range(0, 45, 5))
+    plt.ylabel('temperature')
+    plt.subplot(412)
+    plt.plot(x, y2, color='y')
+    plt.xticks(range(x[0], x[-1] + 1, 1))
+    plt.yticks(range(0, 120, 10))
+    plt.ylabel('humidity')
+    plt.subplot(413)
+    plt.plot(x, y3, color='g')
+    plt.xticks(range(x[0], x[-1] + 1, 1))
+    plt.yticks(range(0, 220, 20))
+    plt.ylabel('heart_rate')
+    plt.subplot(414)
+    plt.axis('off')
+    plt.text(0, 0, "temperature:" + str(y1[-1]))
+    plt.text(0.4, 0, "humidity:" + str(y2[-1]))
+    plt.text(0.8, 0, "heart_rate:" + str(y3[-1]))
+    plt.pause(0.5)
     plt.pause(0.5)
 
 
