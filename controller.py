@@ -148,7 +148,7 @@ def show(x_src, y_src):
     # plt.xlim、plt.ylim 设置横纵坐标轴范围
     # plt.xlabel、plt.ylabel 设置坐标轴名称
     # plt.xticks、plt.yticks 设置坐标轴刻度
-    #  axes.set_*
+    #  axes.set_* 同上
     axes.set_xticks(range(x[0], x[-1] + 1, 1))
     axes.set_yticks(range(0, 45, 5))
     axes.set_ylabel('temperature')
@@ -173,10 +173,10 @@ def run(opt):
     relay_gpio_pin = int(opt.relay)
     record = init(opt)
     time_index = 10
-    x = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    y1 = [25 for i in x]
-    y2 = [20 for i in x]
-    y3 = [50 for i in x]
+    x = [i for i in range(1, 10)]
+    y1 = [25] * len(x)
+    y2 = [20] * len(x)
+    y3 = [50] * len(x)
     while True:
         global_dht11_index = random.randint(0, 1)
         humidity, temperature = DHT11.read_temperature_and_humidity(dht11_gpio_pins, global_dht11_index)
