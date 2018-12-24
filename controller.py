@@ -139,40 +139,28 @@ def set_status(record: Record, status, relay_gpio_pin, cmd):
 def show(x_src, y_src):
     plt.clf()
     (y1_src, y2_src, y3_src) = y_src
-    if len(x_src) > 10:
-        x = x_src[len(x_src) - 10:]
-        y1 = y1_src[len(y1_src) - 10:]
-        y2 = y2_src[len(y2_src) - 10:]
-        y3 = y3_src[len(y3_src) - 10:]
-    else:
-        x = x_src[0:]
-        y1 = y1_src[0:]
-        y2 = y2_src[0:]
-        y3 = y3_src[0:]
-    if len(x) >= 10:
-        xtick = x
-    else:
-        xtick = x[0:]
-        while len(xtick) <= 10:
-            xtick.append(xtick[-1] + 1)
+    x = x_src[len(x_src) - 10:]
+    y1 = y1_src[len(y1_src) - 10:]
+    y2 = y2_src[len(y2_src) - 10:]
+    y3 = y3_src[len(y3_src) - 10:]
     axes = plt.subplot(311)
     axes.plot(x, y1, color='r')
     # plt.xlim、plt.ylim 设置横纵坐标轴范围
     # plt.xlabel、plt.ylabel 设置坐标轴名称
     # plt.xticks、plt.yticks 设置坐标轴刻度
     #  axes.set_*
-    axes.set_xticks(range(xtick[0], xtick[-1] + 1, 1))
-    axes.set_yticks(range(20, 40, 2))
+    axes.set_xticks(range(x[0], x[-1] + 1, 1))
+    axes.set_yticks(range(0, 45, 5))
     axes.set_ylabel('temperature')
     axes = plt.subplot(312)
     axes.plot(x, y2, color='y')
     axes.set_xticks(range(x[0], x[-1] + 1, 1))
-    axes.set_yticks(range(10, 100, 10))
+    axes.set_yticks(range(0, 120, 10))
     axes.set_ylabel('humidity')
     axes = plt.subplot(313)
     axes.plot(x, y3, color='g')
     axes.set_xticks(range(x[0], x[-1] + 1, 1))
-    axes.set_yticks(range(50, 200, 15))
+    axes.set_yticks(range(0, 220, 20))
     axes.set_ylabel('heart_rate')
     plt.pause(0.5)
 
@@ -184,11 +172,11 @@ def run(opt):
     max30102_gpio_pin = int(opt.max30102)
     relay_gpio_pin = int(opt.relay)
     record = init(opt)
-    time_index = 0
-    x = list()
-    y1 = list()
-    y2 = list()
-    y3 = list()
+    time_index = 10
+    x = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    y1 = [25 for i in x]
+    y2 = [20 for i in x]
+    y3 = [50 for i in x]
     while True:
         global_dht11_index = random.randint(0, 1)
         humidity, temperature = DHT11.read_temperature_and_humidity(dht11_gpio_pins, global_dht11_index)
