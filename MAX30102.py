@@ -332,9 +332,9 @@ def main():
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s: %(filename)s[line:%(lineno)d] - %(funcName)s : %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    hr = read_heart_rate(0, 100)
+    hr = read_heart_rate(7, 100)
     logging.info('test once')
-    hr = read_heart_rate(0, 100)
+    hr = read_heart_rate(7, 100)
     logging.info('test once')
 
 
