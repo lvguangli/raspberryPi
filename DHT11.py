@@ -121,6 +121,7 @@ def main(gpio_pins='37,23'):
     # time_sum = 0
         gpio_pins = gpio_pins.split(',')
         gpio_pins = [int(x) for x in gpio_pins]
+        print(gpio_pins)
     for i in range(0, 10):
         humidity, temperature = read_temperature_and_humidity(gpio_pins, 0)
         print('湿度:' + str(humidity))
