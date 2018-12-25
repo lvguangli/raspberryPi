@@ -5,6 +5,7 @@ from time import sleep
 import numpy as np
 import smbus2 as smbus
 import wiringpi as gpio
+import smart_config
 
 # register address- max30102
 REG_INTR_STATUS_1 = 0x00
@@ -304,6 +305,7 @@ def calc_heart_rate(ir_data):
 
 
 def read_heart_rate(gpio_pin=7, n=100):
+    gpio_pin = smart_config.phy2wpi[gpio_pin]
     max30102 = MAX30102(gpio_pin=gpio_pin)
     while True:
         logging.info('read from max30102 once')
