@@ -8,6 +8,7 @@ import DHT11
 import MAX30102
 import smart_config
 import write_to_relay
+import matplotlib.pyplot as plt
 
 
 phy2wpi = {
@@ -132,6 +133,8 @@ def search_status(humidity, temperature, heart_rate):
 
 
 def init(opt):
+    plt.ion()
+    plt.figure(1)
     last_cmd = smart_config.Status.CLOSE
     relay_gpio_pin = int(opt.relay)
     write_to_relay.set_value(relay_gpio_pin, last_cmd)
@@ -164,6 +167,41 @@ def set_status(record: Record, status, relay_gpio_pin, cmd):
     return record
 
 
+def show(x_src, y_src):
+    plt.clf()
+    (y1_src, y2_src, y3_src) = y_src
+    x = x_src[len(x_src) - 10:]
+    y1 = y1_src[len(y1_src) - 10:]
+    y2 = y2_src[len(y2_src) - 10:]
+    y3 = y3_src[len(y3_src) - 10:]
+    # plt.xlim、plt.ylim 设置横纵坐标轴范围
+    # plt.xlabel、plt.ylabel 设置坐标轴名称
+    # plt.xticks、plt.yticks 设置坐标轴刻度
+    #  axes.set_* 同上
+    plt.subplot(411)
+    plt.plot(x, y1, color='r')
+    plt.xticks(range(x[0], x[-1] + 1, 1))
+    plt.yticks(range(0, 45, 5))
+    plt.ylabel('temperature')
+    plt.subplot(412)
+    plt.plot(x, y2, color='y')
+    plt.xticks(range(x[0], x[-1] + 1, 1))
+    plt.yticks(range(0, 120, 10))
+    plt.ylabel('humidity')
+    plt.subplot(413)
+    plt.plot(x, y3, color='g')
+    plt.xticks(range(x[0], x[-1] + 1, 1))
+    plt.yticks(range(0, 220, 20))
+    plt.ylabel('heart_rate')
+    plt.subplot(414)
+    plt.axis('off')
+    plt.text(0, 0, "temperature:" + str(y1[-1]))
+    plt.text(0.35, 0, "humidity:" + str(y2[-1]))
+    plt.text(0.7, 0, "heart_rate:" + str(y3[-1]))
+    plt.pause(0.5)
+    plt.pause(0.5)
+
+
 def run(opt):
     dht11_gpio_pins = opt.dht11
     dht11_gpio_pins = dht11_gpio_pins.split(',')
@@ -171,11 +209,28 @@ def run(opt):
     max30102_gpio_pin = int(opt.max30102)
     relay_gpio_pin = int(opt.relay)
     record = init(opt)
+    time_index = 10
+    x = [i for i in range(1, 10)]
+    y1 = [25] * len(x)
+    y2 = [20] * len(x)
+    y3 = [50] * len(x)
     while True:
         global_dht11_index = random.randint(0, 1)
         humidity, temperature = DHT11.read_temperature_and_humidity(dht11_gpio_pins, global_dht11_index)
         heart_rate = MAX30102.read_heart_rate(max30102_gpio_pin, 100)
         status = search_status(humidity, temperature, heart_rate)
+        x.append(time_index)
+        y1.append(temperature)
+        y2.append(humidity)
+        y3.append(heart_rate)
+        if len(x) > 200:
+            x = x[len(x) - 100:]
+            y1 = y1[len(y1) - 100:]
+            y2 = y2[len(y2) - 100:]
+            y3 = y3[len(y3) - 100:]
+        y = (y1, y2, y3)
+        show(x, y)
+        time_index += 1
         if status == smart_config.Status.UNKNOWN:
             continue
         if record.last_cmd == smart_config.Status.CLOSE and status != smart_config.Status.COLD:
