@@ -181,7 +181,7 @@ class MAX30102:
 
         # calculate threshold
         # n_th = int(np.mean(x))
-            n_th = int(sum(x) / float(len(x)))
+        n_th = int(sum(x) / float(len(x)))
         n_th = 30 if n_th < 30 else n_th  # min allowed
         n_th = 60 if n_th > 60 else n_th  # max allowed
 
