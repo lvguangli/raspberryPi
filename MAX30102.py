@@ -2,7 +2,7 @@
 import logging
 from time import sleep
 
-import numpy as np
+# import numpy as np
 import smbus2 as smbus
 import wiringpi as gpio
 import smart_config
@@ -165,19 +165,23 @@ class MAX30102:
         buffer_size = len(ir_data)
 
         # get dc mean
-        ir_mean = int(np.mean(ir_data))
-
+        # ir_mean = int(np.mean(ir_data))
+        ir_mean = int(sum(ir_data) / float(len(ir_data)))
         # remove DC mean and inver signal
         # this lets peak detecter detect valley
-        x = -1 * (np.array(ir_data) - ir_mean)
+        # x = -1 * (np.array(ir_data) - ir_mean)
+        x = [-1 * (n - ir_mean) for n in ir_data]
 
         # 4 point moving average
         # x is np.array with int values, so automatically casted to int
-        for i in range(x.shape[0] - ma_size):
-            x[i] = np.sum(x[i:i + ma_size]) / ma_size
+        # for i in range(x.shape[0] - ma_size):
+        #     x[i] = np.sum(x[i:i + ma_size]) / ma_size
+        for i in range(len(x) - ma_size):
+            x[i] = sum(x[i:i + ma_size]) / ma_size
 
         # calculate threshold
-        n_th = int(np.mean(x))
+        # n_th = int(np.mean(x))
+            n_th = int(sum(x) / float(len(x)))
         n_th = 30 if n_th < 30 else n_th  # min allowed
         n_th = 60 if n_th > 60 else n_th  # max allowed
 
