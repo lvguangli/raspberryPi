@@ -115,12 +115,13 @@ def read_temperature_and_humidity(gpio_pins: list, global_dht11_index: int):
     return humidity, temperature
 
 
-def main(gpio_pin=37):
+def main(gpio_pins='37,23'):
     if len(sys.argv) > 1:
-        gpio_pin = int(sys.argv[1])
+        gpio_pins = sys.argv[1]
     # time_sum = 0
-    for i in range(0, 100):
-        gpio_pins = [gpio_pin]
+        gpio_pins = gpio_pins.split(',')
+        gpio_pins = [int(x) for x in gpio_pins]
+    for i in range(0, 10):
         humidity, temperature = read_temperature_and_humidity(gpio_pins, 0)
         print('湿度:' + str(humidity))
         print('温度:' + str(temperature))
