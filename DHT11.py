@@ -115,7 +115,7 @@ def read_temperature_and_humidity(gpio_pins: list, global_dht11_index: int):
     return humidity, temperature
 
 
-def main(gpio_pin=0):
+def main(gpio_pin=37):
     if len(sys.argv) > 1:
         gpio_pin = int(sys.argv[1])
     # time_sum = 0
