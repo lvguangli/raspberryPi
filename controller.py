@@ -10,6 +10,37 @@ import smart_config
 import write_to_relay
 
 
+phy2wpi = {
+    3: 8,
+    5: 9,
+    7: 7,
+    11: 0,
+    13: 2,
+    15: 3,
+    19: 12,
+    21: 13,
+    23: 14,
+    27: 30,
+    29: 21,
+    31: 22,
+    33: 23,
+    35: 24,
+    37: 25,
+    8: 15,
+    10: 16,
+    12: 1,
+    16: 4,
+    18: 5,
+    22: 6,
+    24: 10,
+    26: 11,
+    28: 31,
+    32: 26,
+    36: 27,
+    38: 28,
+    40: 29
+}
+
 class Record:
     loop = 0
     last_cmd = smart_config.Status.OPEN
@@ -22,24 +53,24 @@ def get_args():
         '--dht11',
         action='store',
         dest='dht11',
-        type='int',
-        default=0,
-        help='dht11 gpio wiringpi pin'
+        type='str',
+        default='37',
+        help='dht11 gpio wiringpi pins'
     )
     parser.add_option(
         '--max30102',
         action='store',
         dest='max30102',
-        type='int',
-        default=0,
+        type='str',
+        default='7',
         help='max30102 gpio wiringpi pin'
     )
     parser.add_option(
         '--relay',
         action='store',
         dest='relay',
-        type='int',
-        default=2,
+        type='str',
+        default='12',
         help='relay gpio wiringpi pin'
     )
     parser.add_option(
