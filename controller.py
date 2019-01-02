@@ -52,6 +52,14 @@ def get_args():
         help='run the controller loop times, 0 means never stop'
     )
     parser.add_option(
+        '--model',
+        action='store',
+        dest='model',
+        type='str',
+        default='physical',
+        help='gpio pin model, physical or wiringpi'
+    )
+    parser.add_option(
         '--debug',
         action='store',
         dest='debug',
@@ -67,8 +75,11 @@ def get_args():
         default=0,
         help=' just blink the relay every test second pass'
     )
-    (opts, args) = parser.parse_args()
-    return opts
+    (opt, args) = parser.parse_args()
+    if opt.model == 'wiringpi':
+        for key in smart_config.phy2wpi:
+            smart_config.phy2wpi[key] = key
+    return opt
 
 
 def test_case(opt):
@@ -168,7 +179,6 @@ def show(x_src, y_src):
     plt.text(0.35, 0, "humidity:" + str(y2[-1]))
     plt.text(0.7, 0, "heart_rate:" + str(y3[-1]))
     plt.pause(0.5)
-    plt.pause(0.5)
 
 
 def run(opt):
@@ -179,7 +189,7 @@ def run(opt):
     relay_gpio_pin = int(opt.relay)
     record = init(opt)
     time_index = 10
-    x = [i for i in range(1, 10)]
+    x = [i for i in range(-9, 0)]
     y1 = [25] * len(x)
     y2 = [20] * len(x)
     y3 = [50] * len(x)
