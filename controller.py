@@ -112,6 +112,15 @@ def search_status(humidity, temperature, heart_rate):
     return status
 
 
+def search_status_test(humidity, temperature, heart_rate):
+    status = smart_config.Status.UNKNOWN
+    if humidity < smart_config.Humidity.down_threshold or temperature < smart_config.Temperature.down_threshold or heart_rate < smart_config.HeartRate.down_threshold:
+        status = smart_config.Status.COLD
+    elif humidity >= smart_config.Humidity.up_threshold or temperature >= smart_config.Temperature.up_threshold or heart_rate >= smart_config.HeartRate.up_threshold:
+        status = smart_config.Status.HOT
+    return status
+
+
 def init(opt):
     plt.ion()
     plt.figure(1)
@@ -197,7 +206,7 @@ def run(opt):
         global_dht11_index = random.randint(0, 1)
         humidity, temperature = DHT11.read_temperature_and_humidity(dht11_gpio_pins, global_dht11_index)
         heart_rate = MAX30102.read_heart_rate(max30102_gpio_pin, 100)
-        status = search_status(humidity, temperature, heart_rate)
+        status = search_status_test(humidity, temperature, heart_rate)
         x.append(time_index)
         y1.append(temperature)
         y2.append(humidity)
