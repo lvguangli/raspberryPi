@@ -19,7 +19,7 @@ def blink(gpio_pin: int, delay: int):
         gpio.delay(delay)
 
 
-def main(gpio_pin=2):
+def main(gpio_pin=12):
     if len(sys.argv) > 1:
         gpio_pin = int(sys.argv[1])
     blink(gpio_pin, 500)
