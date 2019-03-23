@@ -326,6 +326,7 @@ def read_heart_rate(gpio_pin=7, n=100):
             return hr
         max30102.reset()
         max30102.setup(led_mode=0x03)
+    return 0
 
 
 def main():
