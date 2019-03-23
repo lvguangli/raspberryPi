@@ -22,7 +22,7 @@ def blink(gpio_pin: int, delay: int):
 def main(gpio_pin=12):
     if len(sys.argv) > 1:
         gpio_pin = int(sys.argv[1])
-    blink(gpio_pin, 500)
+    blink(gpio_pin, 2000)
 
 
 if __name__ == '__main__':
