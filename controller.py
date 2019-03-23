@@ -126,7 +126,7 @@ def init(opt):
     plt.figure(1)
     last_cmd = smart_config.Status.CLOSE
     relay_gpio_pin = int(opt.relay)
-    write_to_relay.set_value(relay_gpio_pin, last_cmd)
+    write_to_relay.set_value(relay_gpio_pin, 0)
     record = Record()
     record.last_status = smart_config.Status.UNKNOWN
     record.last_cmd = last_cmd
