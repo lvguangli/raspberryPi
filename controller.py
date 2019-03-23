@@ -114,9 +114,9 @@ def search_status(humidity, temperature, heart_rate):
 
 def search_status_test(humidity, temperature, heart_rate):
     status = smart_config.Status.UNKNOWN
-    if humidity < smart_config.Humidity.down_threshold or temperature < smart_config.Temperature.down_threshold or heart_rate < smart_config.HeartRate.down_threshold:
+    if temperature < smart_config.Temperature.down_threshold:
         status = smart_config.Status.COLD
-    elif humidity >= smart_config.Humidity.up_threshold or temperature >= smart_config.Temperature.up_threshold or heart_rate >= smart_config.HeartRate.up_threshold:
+    elif temperature >= smart_config.Temperature.up_threshold:
         status = smart_config.Status.HOT
     return status
 
