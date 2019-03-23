@@ -5,8 +5,8 @@ class Temperature:
     """
     主要用来校验人体状态
     """
-    up_threshold = 35
-    down_threshold = 35
+    up_threshold = 30
+    down_threshold = 30
 
 
 class Humidity:
