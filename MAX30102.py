@@ -311,7 +311,7 @@ def calc_heart_rate(ir_data):
 def read_heart_rate(gpio_pin=7, n=100):
     gpio_pin = smart_config.phy2wpi[gpio_pin]
     max30102 = MAX30102(gpio_pin=gpio_pin)
-    while True:
+    if True:
         logging.info('read from max30102 once')
         red_buf, ir_buf = max30102.read_sequential(amount=n)
         hr_valid, hr = max30102.calc_heart_rate(ir_buf)
