@@ -5,7 +5,7 @@ from time import sleep
 # import numpy as np
 import smbus2 as smbus
 import wiringpi as gpio
-import smart_config
+import SmartConfig
 
 # register address- max30102
 REG_INTR_STATUS_1 = 0x00
@@ -309,7 +309,7 @@ def calc_heart_rate(ir_data):
 
 
 def read_heart_rate(gpio_pin=7, n=100):
-    gpio_pin = smart_config.phy2wpi[gpio_pin]
+    gpio_pin = SmartConfig.phy2wpi[gpio_pin]
     max30102 = MAX30102(gpio_pin=gpio_pin)
     if True:
         logging.info('read from max30102 once')
@@ -319,7 +319,7 @@ def read_heart_rate(gpio_pin=7, n=100):
         logging.info(hr)
         if hr_valid:
             logging.info(ir_buf)
-            with open('hrdump.log', 'a') as output:
+            with open('log/hrdump.log', 'a') as output:
                 line = str(hr) + ' [' + ','.join([str(x) for x in ir_buf]) + ']\n'
                 output.write(line)
             max30102.shutdown()

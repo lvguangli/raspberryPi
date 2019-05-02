@@ -4,7 +4,7 @@ import sys
 import time
 
 import wiringpi as gpio
-import smart_config
+import SmartConfig
 
 
 class DHT11:
@@ -96,7 +96,7 @@ class DHT11:
 
 
 def read_temperature_and_humidity(gpio_pins: list, global_dht11_index: int):
-    gpio_pins = [smart_config.phy2wpi[x] for x in gpio_pins]
+    gpio_pins = [SmartConfig.phy2wpi[x] for x in gpio_pins]
     numbers_of_dht11 = len(gpio_pins)
     while True:
         dht11_obj = DHT11(gpio_pins[global_dht11_index % numbers_of_dht11])
