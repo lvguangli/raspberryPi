@@ -138,7 +138,7 @@ class SmartClothes:
             self.__draw()
 
 
-def get_args():
+def parse_args():
     parser = OptionParser()
     parser.add_option(
         '--dht11',
@@ -191,7 +191,7 @@ def main():
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)s: %(filename)s[line:%(lineno)d] - %(funcName)s : %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    opt = get_args()
+    opt = parse_args()
 
     smart_clothes = SmartClothes(opt.dht11, opt.max30102, opt.relay)
     smart_clothes.run()

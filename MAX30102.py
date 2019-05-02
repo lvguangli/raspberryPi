@@ -335,8 +335,10 @@ def main():
                         datefmt='%Y-%m-%d %H:%M:%S')
     hr = read_heart_rate(7, 100)
     logging.info('test once')
+    print(hr)
     hr = read_heart_rate(7, 100)
     logging.info('test once')
+    print(hr)
 
 
 if __name__ == '__main__':
