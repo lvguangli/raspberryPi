@@ -138,6 +138,8 @@ def init(opt):
 def set_status(record: Record, status, relay_gpio_pin, cmd):
     if cmd == smart_config.Status.OPEN:
         write_to_relay.set_value(relay_gpio_pin, 1)
+        time.sleep(3)
+        write_to_relay.set_value(relay_gpio_pin, 0)
     elif cmd == smart_config.Status.CLOSE:
         write_to_relay.set_value(relay_gpio_pin, 0)
     record.last_cmd = cmd
