@@ -45,6 +45,8 @@ class Status:
 # coding:utf-8
 
 
+TIMEINTERVAL = 3
+
 class MyConst:
     class ConstError(TypeError):
         pass
