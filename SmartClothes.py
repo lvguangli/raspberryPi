@@ -87,7 +87,7 @@ class SmartClothes:
 
     def __open_relay(self):
         RELAY.set_value(self.__relay, SmartConfig.Status.OPEN)
-        time.sleep(3)
+        time.sleep(SmartConfig.TIMEINTERVAL)
         RELAY.set_value(self.__relay, SmartConfig.Status.CLOSE)
 
     def __draw(self):

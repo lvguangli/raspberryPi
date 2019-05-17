@@ -36,6 +36,9 @@ class Status:
     UNKNOWN = 6
 
 
+
+TIMEINTERVAL = 3
+
 # coding:utf-8
 
 
